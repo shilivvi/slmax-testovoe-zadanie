@@ -38,31 +38,51 @@ class People
                 $this->birthCity = $peopleData[0]['birth_city'];
             }
         } else {
-            $this->validateFirstName($firstName);
-            $this->validateLastName($lastName);
-            $this->validateBirthDate($birthDate);
-            $this->validateGender($gender);
-            $this->validateBirthCity($birthCity);
-
-            $this->DB->query(
-                'INSERT INTO people(first_name, last_name, birth_date, gender, birth_city) VALUES(?,?,?,?,?)',
-                [
-                    $firstName,
-                    $lastName,
-                    $birthDate,
-                    $gender,
-                    $birthCity
-                ]
-            );
-
-            $this->id = $this->DB->lastInsertId();
             $this->firstName = $firstName;
             $this->lastName = $lastName;
             $this->birthDate = $birthDate;
             $this->gender = $gender;
             $this->birthCity = $birthCity;
+
+            $this->save();
         }
 
+    }
+
+    public function save()
+    {
+        $this->validateFirstName($this->firstName);
+        $this->validateLastName($this->lastName);
+        $this->validateBirthDate($this->birthDate);
+        $this->validateGender($this->gender);
+        $this->validateBirthCity($this->birthCity);
+
+        if (empty($this->id)) {
+            $this->DB->query(
+                'INSERT INTO people(first_name, last_name, birth_date, gender, birth_city) VALUES(?,?,?,?,?)',
+                [
+                    $this->firstName,
+                    $this->lastName,
+                    $this->birthDate,
+                    $this->gender,
+                    $this->birthCity,
+                ]
+            );
+
+            $this->id = $this->DB->lastInsertId();
+        } else {
+            $this->DB->query(
+                'UPDATE people SET first_name = ?, last_name = ?, birth_date = ?, gender = ?, birth_city = ?) WHERE id = ?',
+                [
+                    $this->firstName,
+                    $this->lastName,
+                    $this->birthDate,
+                    $this->gender,
+                    $this->birthCity,
+                    $this->id
+                ]
+            );
+        }
     }
 
     private function validateId($id)
