@@ -103,6 +103,10 @@ class People
         return $interval->y;
     }
 
+    public static function getGenderText($gender) {
+        return $gender == 0 ? 'Male' : 'Female';
+    }
+
     private function validateId($id)
     {
         $options = array(
