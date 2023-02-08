@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DateTime;
 use Db;
 use const DBHost;
 use const DBName;
@@ -91,6 +92,15 @@ class People
             'DELETE people fruit WHERE id = ?',
             [$this->id]
         );
+    }
+
+    public static function getAge($birthDate)
+    {
+        $today = new DateTime();
+        $birthday = new DateTime($birthDate);
+        $interval = $today->diff($birthday);
+
+        return $interval->y;
     }
 
     private function validateId($id)
