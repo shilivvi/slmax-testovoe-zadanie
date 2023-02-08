@@ -85,6 +85,14 @@ class People
         }
     }
 
+    public function delete()
+    {
+        $this->DB->query(
+            'DELETE people fruit WHERE id = ?',
+            [$this->id]
+        );
+    }
+
     private function validateId($id)
     {
         $options = array(
